@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arch Linux - Полное руководство по установке</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <style>
+        :root {
+            --primary: #1793d1;
+            --secondary: #0c5d87;
+            --accent: #ff8c00;
+            --dark: #0d1117;
+            --darker: #090c10;
+            --light: #f5f5f5;
+            --gray: #8b949e;
+            --success: #238636;
+            --warning: #9e6a03;
+            --danger: #f85149;
+            --code-bg: #161b22;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--secondary) 100%);
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(23,147,209,0.1) 0%, rgba(13,17,23,0) 70%);
+            z-index: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .warning {
+            background: rgba(158, 106, 3, 0.15);
+            border-left: 4px solid var(--warning);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 5px 5px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .warning i {
+            color: var(--warning);
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 280px;
+            background-color: var(--darker);
+            border-radius: 10px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .content {
+            flex: 3;
+            min-width: 300px;
+        }
+        
+        .step-nav {
+            list-style: none;
+        }
+        
+        .step-item {
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid transparent;
+        }
+        
+        .step-item:hover {
+            background-color: rgba(23, 147, 209, 0.1);
+        }
+        
+        .step-item.active {
+            background-color: rgba(23, 147, 209, 0.2);
+            border-left: 3px solid var(--primary);
+            font-weight: bold;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .step-item.active .step-number {
+            background-color: var(--primary);
+        }
+        
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .step-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            font-size: 1.8rem;
+        }
+        
+        .step-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            color: #c9d1d9;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid #30363d;
+            position: relative;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--primary);
+        }
+        
+        .copy-btn.copied {
+            background-color: var(--success);
+        }
+        
+        pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        code {
+            color: #d4d4d4;
+        }
+        
+        .hljs {
+            background: transparent;
+            padding: 0;
+        }
+        
+        .note {
+            background-color: rgba(35, 134, 54, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .note i {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
+        .danger {
+            background-color: rgba(248, 81, 73, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .danger i {
+            color: var(--danger);
+            margin-right: 10px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #30363d;
+        }
+        
+        .nav-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 147, 209, 0.3);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .troubleshooting {
+            background-color: var(--darker);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 40px;
+            border: 1px solid #30363d;
+        }
+        
+        .troubleshooting h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .troubleshooting-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .troubleshooting-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .troubleshooting-question {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #f0f6fc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .troubleshooting-question i {
+            color: var(--accent);
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: #30363d;
+            border-radius: 3px;
+            margin: 30px 0 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+            width: 12.5%; /* Начальное значение для первого шага */
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid #30363d;
+            margin-top: 3rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fab fa-linux"></i>
+                <h1>Arch Linux - Полное руководство по установке</h1>
+            </div>
+            <p class="subtitle">Пошаговое руководство с пояснениями, примерами кода и решением распространённых проблем</p>
+            <div class="warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Внимание:</strong> Установка Arch Linux требует базовых знаний о работе с Linux и командной строкой. Это руководство предназначено для опытных пользователей.
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Шаг 1 из 8</div>
+        
+        <div class="main-content">
+            <nav class="sidebar">
+                <ul class="step-nav">
+                    <li class="step-item active" data-step="1">
+                        <span class="step-number">1</span>
+                        <span class="step-title">Проверка интернета</span>
+                    </li>
+                    <li class="step-item" data-step="2">
+                        <span class="step-number">2</span>
+                        <span class="step-title">Разметка диска</span>
+                    </li>
+                    <li class="step-item" data-step="3">
+                        <span class="step-number">3</span>
+                        <span class="step-title">Форматирование</span>
+                    </li>
+                    <li class="step-item" data-step="4">
+                        <span class="step-number">4</span>
+                        <span class="step-title">Монтирование</span>
+                    </li>
+                    <li class="step-item" data-step="5">
+                        <span class="step-number">5</span>
+                        <span class="step-title">Установка пакетов</span>
+                    </li>
+                    <li class="step-item" data-step="6">
+                        <span class="step-number">6</span>
+                        <span class="step-title">Настройка системы</span>
+                    </li>
+                    <li class="step-item" data-step="7">
+                        <span class="step-number">7</span>
+                        <span class="step-title">Установка загрузчика</span>
+                    </li>
+                    <li class="step-item" data-step="8">
+                        <span class="step-number">8</span>
+                        <span class="step-title">Завершение</span>
+                    </li>
+                </ul>
+            </nav>
+            
+            <main class="content">
+                <!-- Шаг 1: Проверка интернета -->
+                <section class="step-content active" id="step-1">
+                    <h2><i class="fas fa-wifi"></i> Шаг 1: Проверка интернет-подключения</h2>
+                    <div class="step-description">
+                        <p>Перед началом установки необходимо убедиться, что у вас есть активное интернет-подключение. Arch Linux загружает пакеты из онлайн-репозиториев во время установки.</p>
+                        <p>Если у вас проводное соединение, оно должно работать автоматически. Для беспроводного подключения используйте утилиту <code>iwctl</code>.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Проверка подключения</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Проверка доступности сетевых ресурсов
+ping archlinux.org -c 4
+
+# Или альтернативный вариант
+ping google.com -c 4</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Если команда <code>ping</code> не работает, это может означать, что у вас нет сетевого подключения или ICMP-трафик заблокирован. Попробуйте использовать <code>curl -I https://archlinux.org</code> для проверки.
+                    </div>
+                    
+                    <h3>Для беспроводного подключения:</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Настройка Wi-Fi</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Запуск интерактивной утилиты для Wi-Fi
+iwctl
+
+# Внутри iwctl:
+[iwd]# device list           # Показать доступные сетевые устройства
+[iwd]# station wlan0 scan    # Просканировать сети (замените wlan0 на ваше устройство)
+[iwd]# station wlan0 get-networks  # Показать найденные сети
+[iwd]# station wlan0 connect "SSID"  # Подключиться к сети (укажите имя сети)
+
+# Выйти из iwctl
+[iwd]# exit</code></pre>
+                    </div>
+                </section>
+                
+                <!-- Шаг 2: Разметка диска -->
+                <section class="step-content" id="step-2">
+                    <h2><i class="fas fa-hdd"></i> Шаг 2: Разметка диска</h2>
+                    <div class="step-description">
+                        <p>Определите целевой диск и создайте разделы. Для UEFI-системы вам понадобится как минимум два раздела: EFI System Partition (ESP) и корневой раздел.</p>
+                        <p><strong>ВАЖНО:</strong> Убедитесь, что выбрали правильный диск, так как все данные на нём будут удалены!</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Определение дисков</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Показать все диски и разделы
+lsblk
+
+# Более подробная информация
+fdisk -l</code></pre>
+                    </div>
+                    
+                    <div class="danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Внимание:</strong> Будьте осторожны при выборе диска. Если у вас несколько дисков, они могут называться <code>/dev/sda</code>, <code>/dev/sdb</code> и т.д. В последних системах могут использоваться названия <code>/dev/nvme0n1</code>.
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Разметка диска с помощью cfdisk</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Запуск cfdisk для нужного диска (например, /dev/sda)
+cfdisk /dev/sda</code></pre>
+                    </div>
+                    
+                    <h3>Создание разделов:</h3>
+                    <ul class="step-description" style="padding-left: 20px; margin-top: 10px;">
+                        <li><strong>EFI System Partition (ESP):</strong> Размер 300-512 МБ, тип <code>EFI System</code></li>
+                        <li><strong>Корневой раздел (/):</strong> Размер от 60 ГБ (рекомендуется), тип <code>Linux filesystem</code></li>
+                    </ul>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Вы также можете создать отдельные разделы для <code>/home</code> (ваши пользовательские файлы) и swap (файл подкачки). Однако для минимальной установки достаточно только ESP и корневого раздела.
+                    </div>
+                </section>
+                
+                <!-- Шаг 3: Форматирование разделов -->
+                <section class="step-content" id="step-3">
+                    <h2><i class="fas fa-file-export"></i> Шаг 3: Форматирование разделов</h2>
+                    <div class="step-description">
+                        <p>После создания разделов необходимо отформатировать их в соответствующие файловые системы.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Форматирование ESP в FAT32</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Замените sdX1 на ваш EFI-раздел (например, /dev/sda1)
+mkfs.fat -F32 /dev/sdX1</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Форматирование корневого раздела в ext4</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Замените sdX2 на ваш корневой раздел (например, /dev/sda2)
+mkfs.ext4 /dev/sdX2</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Вместо ext4 вы можете использовать другие файловые системы, такие как Btrfs, XFS или ext4 с шифрованием. Однако для новичков рекомендуется ext4 как наиболее стабильный вариант.
+                    </div>
+                </section>
+                
+                <!-- Шаг 4: Монтирование разделов -->
+                <section class="step-content" id="step-4">
+                    <h2><i class="fas fa-folder-open"></i> Шаг 4: Монтирование разделов</h2>
+                    <div class="step-description">
+                        <p>Теперь необходимо примонтировать созданные разделы, чтобы начать установку системы.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Монтирование корневого раздела</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Монтируем корневой раздел в /mnt
+mount /dev/sdX2 /mnt</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Создание директории и монтирование ESP</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Создаем директорию для ESP
+mkdir -p /mnt/boot/efi
+
+# Монтируем ESP
+mount /dev/sdX1 /mnt/boot/efi</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Если вы создали дополнительные разделы (например, для <code>/home</code>), их также нужно отформатировать и смонтировать в соответствующие директории внутри <code>/mnt</code>.
+                    </div>
+                </section>
+                
+                <!-- Шаг 5: Установка пакетов -->
+                <section class="step-content" id="step-5">
+                    <h2><i class="fas fa-download"></i> Шаг 5: Установка базовых пакетов</h2>
+                    <div class="step-description">
+                        <p>Теперь установим минимальный набор пакетов Arch Linux в смонтированную систему.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Минимальная установка</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Установка базовых пакетов, ядра Linux и микрокода
+pacstrap /mnt base linux linux-firmware</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Расширенная установка (рекомендуется)</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Установка с дополнительными полезными пакетами
+pacstrap /mnt base base-devel linux linux-firmware \
+          networkmanager nano sudo grub efibootmgr \
+          dhcpcd iwd bash-completion</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Если у вас процессор Intel или AMD, вы можете добавить соответствующий микрокод для обновлений безопасности: <code>intel-ucode</code> для Intel или <code>amd-ucode</code> для AMD.
+                    </div>
+                </section>
+                
+                <!-- Шаг 6: Настройка системы -->
+                <section class="step-content" id="step-6">
+                    <h2><i class="fas fa-cogs"></i> Шаг 6: Настройка системы</h2>
+                    <div class="step-description">
+                        <p>После установки пакетов необходимо выполнить базовую настройку системы.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Генерация fstab и переход в chroot</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Генерация таблицы файловых систем
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Проверка сгенерированного fstab
+cat /mnt/etc/fstab
+
+# Переход в установленную систему
+arch-chroot /mnt</code></pre>
+                    </div>
+                    
+                    <h3>Базовая настройка:</h3>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Настройка времени, локали и hostname</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Установка часового пояса (например, Europe/Moscow)
+ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+hwclock --systohc
+
+# Настройка локали
+sed -i 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sed -i 's/#ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+# Установка hostname (имени компьютера)
+echo "archlinux" > /etc/hostname
+
+# Добавление hostname в hosts
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1       localhost" >> /etc/hosts
+echo "127.0.1.1 archlinux.localdomain archlinux" >> /etc/hosts</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Создание пользователя и настройка sudo</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Установка пароля для root
+passwd
+
+# Создание обычного пользователя (замените username на ваше имя)
+useradd -m -G wheel -s /bin/bash username
+passwd username
+
+# Настройка sudo для группы wheel
+echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers</code></pre>
+                    </div>
+                </section>
+                
+                <!-- Шаг 7: Установка загрузчика -->
+                <section class="step-content" id="step-7">
+                    <h2><i class="fas fa-play-circle"></i> Шаг 7: Установка загрузчика</h2>
+                    <div class="step-description">
+                        <p>GRUB - самый распространённый загрузчик для Linux. Установим его для загрузки нашей системы.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Установка GRUB для UEFI-систем</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Установка GRUB в ESP
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
+
+# Генерация конфигурационного файла GRUB
+grub-mkconfig -o /boot/grub/grub.cfg</code></pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Дополнительно: Включение NetworkManager</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Включение автоматического запуска NetworkManager
+systemctl enable NetworkManager
+
+# Выход из chroot
+exit</code></pre>
+                    </div>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Если у вас система с BIOS (не UEFI), используйте команду <code>grub-install --target=i386-pc /dev/sdX</code> (где sdX - ваш диск, например, /dev/sda).
+                    </div>
+                </section>
+                
+                <!-- Шаг 8: Завершение -->
+                <section class="step-content" id="step-8">
+                    <h2><i class="fas fa-flag-checkered"></i> Шаг 8: Завершение установки</h2>
+                    <div class="step-description">
+                        <p>Поздравляем! Основная часть установки завершена. Осталось только размонтировать разделы и перезагрузиться.</p>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Завершение установки</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> Копировать</button>
+                        </div>
+                        <pre><code class="language-bash"># Размонтирование всех разделов
+umount -R /mnt
+
+# Перезагрузка системы
+reboot</code></pre>
+                    </div>
+                    
+                    <div class="warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Важно:</strong> После перезагрузки не забудьте извлечь установочный носитель (флешку или диск), иначе система снова запустится с него.
+                    </div>
+                    
+                    <h3>Что делать после установки:</h3>
+                    <ul class="step-description" style="padding-left: 20px; margin-top: 10px;">
+                        <li>Войдите в систему под созданным пользователем</li>
+                        <li>Установите графическую оболочку (GNOME, KDE Plasma, XFCE и т.д.)</li>
+                        <li>Установите драйверы для вашего оборудования</li>
+                        <li>Настройте звук, если он не работает</li>
+                        <li>Установите необходимые программы и настройте систему под свои нужды</li>
+                    </ul>
+                    
+                    <div class="note">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Совет:</strong> Для продолжения настройки после установки ознакомьтесь с <a href="https://wiki.archlinux.org/" target="_blank" style="color: var(--primary);">официальной Arch Wiki</a> - это лучший источник информации об Arch Linux.
+                    </div>
+                </section>
+                
+                <!-- Навигационные кнопки -->
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="prev-btn" disabled>
+                        <i class="fas fa-arrow-left"></i> Назад
+                    </button>
+                    <button class="nav-btn" id="next-btn">
+                        Далее <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Troubleshooting раздел -->
+                <div class="troubleshooting">
+                    <h3><i class="fas fa-tools"></i> Troubleshooting - Решение проблем</h3>
+                    
+                    <div class="troubleshooting-item">
+                        <div class="troubleshooting-question">
+                            <i class="fas fa-question-circle"></i>
+                            Нет интернета после запуска iwctl
+                        </div>
+                        <p>Убедитесь, что ваш Wi-Fi адаптер поддерживается. Для некоторых адаптеров нужны проприетарные драйверы. Проверьте, загружен ли нужный модуль ядра с помощью <code>lsmod | grep wifi</code>.</p>
+                    </div>
+                    
+                    <div class="troubleshooting-item">
+                        <div class="troubleshooting-question">
+                            <i class="fas fa-question-circle"></i>
+                            Ошибка "Failed to commit transaction" при установке пакетов
+                        </div>
+                        <p>Попробуйте обновить ключи пакетов: <code>pacman-key --init && pacman-key --populate archlinux</code>. Также проверьте подключение к интернету и попробуйте обновить зеркала с помощью <code>pacman -Syy</code>.</p>
+                    </div>
+                    
+                    <div class="troubleshooting-item">
+                        <div class="troubleshooting-question">
+                            <i class="fas fa-question-circle"></i>
+                            Система не загружается после установки GRUB
+                        </div>
+                        <p>Убедитесь, что вы установили GRUB на правильный диск и правильно указали EFI-раздел. Проверьте, поддерживает ли ваша система UEFI и включен ли он в BIOS/UEFI настройках.</p>
+                    </div>
+                    
+                    <div class="troubleshooting-item">
+                        <div class="troubleshooting-question">
+                            <i class="fas fa-question-circle"></i>
+                            Не работает звук после установки
+                        </div>
+                        <p>Установите и включите звуковой демон: <code>pacman -S pulseaudio pulseaudio-alsa</code> и <code>systemctl --user enable pulseaudio</code>. Для ALSA: <code>pacman -S alsa-utils</code> и запустите <code>alsamixer</code> для настройки.</p>
+                    </div>
+                    
+                    <div class="troubleshooting-item">
+                        <div class="troubleshooting-question">
+                            <i class="fas fa-question-circle"></i>
+                            Черный экран после установки графической оболочки
+                        </div>
+                        <p>Возможно, не установлены драйверы для вашей видеокарты. Установите соответствующие драйверы: <code>nvidia</code> для NVIDIA, <code>xf86-video-amdgpu</code> для AMD, <code>xf86-video-intel</code> для Intel.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <footer>
+            <p>Arch Linux Installation Guide © 2023</p>
+            <p>Это руководство является упрощённой версией официальной документации. Для получения полной информации посетите <a href="https://wiki.archlinux.org/" target="_blank">Arch Wiki</a>.</p>
+            <div class="footer-links">
+                <a href="https://archlinux.org/" target="_blank"><i class="fas fa-external-link-alt"></i> Официальный сайт</a>
+                <a href="https://wiki.archlinux.org/" target="_blank"><i class="fas fa-book"></i> Arch Wiki</a>
+                <a href="https://bbs.archlinux.org/" target="_blank"><i class="fas fa-users"></i> Форум</a>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация подсветки синтаксиса
+            hljs.highlightAll();
+            
+            // Переменные для навигации
+            let currentStep = 1;
+            const totalSteps = 8;
+            const stepItems = document.querySelectorAll('.step-item');
+            const stepContents = document.querySelectorAll('.step-content');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const progressBar = document.getElementById('progress');
+            const progressText = document.getElementById('progress-text');
+            
+            // Функция обновления отображения шага
+            function updateStepDisplay() {
+                // Обновление активного шага в навигации
+                stepItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (parseInt(item.dataset.step) === currentStep) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Обновление отображаемого контента
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `step-${currentStep}`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // Обновление состояния кнопок
+                prevBtn.disabled = currentStep === 1;
+                nextBtn.innerHTML = currentStep === totalSteps 
+                    ? 'Завершить <i class="fas fa-check"></i>' 
+                    : 'Далее <i class="fas fa-arrow-right"></i>';
+                
+                // Обновление прогресс-бара
+                const progressPercent = (currentStep / totalSteps) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                progressText.textContent = `Шаг ${currentStep} из ${totalSteps}`;
+                
+                // Прокрутка к началу контента при смене шага
+                document.querySelector('.content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+            // Обработчики для навигации по шагам
+            stepItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    currentStep = parseInt(this.dataset.step);
+                    updateStepDisplay();
+                });
+            });
+            
+            // Кнопка "Назад"
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateStepDisplay();
+                }
+            });
+            
+            // Кнопка "Далее"
+            nextBtn.addEventListener('click', function() {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStepDisplay();
+                } else {
+                    // Если на последнем шаге, показываем сообщение
+                    alert('Поздравляем! Вы завершили изучение руководства по установке Arch Linux. Удачи в установке!');
+                }
+            });
+            
+            // Кнопки копирования кода
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const codeBlock = this.closest('.code-block').querySelector('code');
+                    const codeText = codeBlock.textContent;
+                    
+                    // Копирование в буфер обмена
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+                        this.classList.add('copied');
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Ошибка копирования: ', err);
+                    });
+                });
+            });
+            
+            // Инициализация отображения первого шага
+            updateStepDisplay();
+        });
+    </script>
+</body>
+</html>
